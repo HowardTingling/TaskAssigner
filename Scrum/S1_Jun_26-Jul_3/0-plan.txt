@@ -1,0 +1,17 @@
+GOAL: Have finalized web design; wireframe; setup.
+
+User Stories:
+1. Customer: create an assignment of passenger to drivers to share
+	-Create driver(s) with driver capacity so that driver is assigned correct number of passengers
+	-Create passenger(s) to be assigned to drivers
+2. Customer: Post-assignment, manually reassign passengers and drivers (change mind or enact preferences)
+3. Developer: Modular cards that display driver/passenger when created so that it can be used everywhere in other contexts
+4. Customer: Easily accessible input system & quick display of results for responsive interactivity (prevent rage)
+5. Customer: Printable version for better readability
+6. Customer: Sharable so others can see the assignment
+7. Customer: Allow for collaborative edit so that assignments can be made based on multiple input preferences
+	-Possible solution: require account creation to authenticate specific individuals
+8. Developer: Wireframe of website to prevent last minute changes to already implemented design; rollback = wasted labor & time
+
+Scrum Schedule (Morning - 12 PM):
+Sunday, Tuesday, Thursday, Saturday
