@@ -14,11 +14,19 @@ card.prototype.draw = function() {
     cardbutton.textContent = this.string;
     document.body.appendChild(cardbutton);
 }
+var drawcards = function(cards) {
+    for (var i = 0; i < cards.length; ++i) {
+        cards[i].draw();
+    }
+}
 
 //make card array; push onto card array
 var cards = [];
 cards.push(new card(30, 100, "Howard", 20, 50));
 cards.push(new card(30, 100, "Jason", 20, 80));
-for (var i = 0; i < cards.length; ++i) {
-    cards[i].draw();
-}
+drawcards(cards);
+
+/*
+ * NOTE: Cards need to be editable
+ * Change string, then update this.string, and redraw.
+ */
