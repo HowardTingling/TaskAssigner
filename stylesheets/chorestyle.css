@@ -1,4 +1,4 @@
-input.MyButton {
+input.MyButton, .card {
     margin-bottom: 10px;
     padding: 10px;
     cursor: pointer;
@@ -10,7 +10,7 @@ input.MyButton {
     border-radius: 10px;
 }
 
-input.MyButton:hover {
+input.MyButton:hover, .card:hover{
     color: #ffff00;
     background: #000;
     border: 1px solid #fff;
