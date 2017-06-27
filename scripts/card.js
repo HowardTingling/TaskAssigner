@@ -23,5 +23,4 @@ window.onmouseup = function() {
     --mouseDown;
 }
 var cards = document.querySelectorAll('.card');
-cards[0].addEventListener("mousedown", onMouseHold(cards[0]));
 window.addEventListener("mousemove", onMouseHold(cards[0]));
