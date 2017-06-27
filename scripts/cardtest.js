@@ -14,7 +14,11 @@ card.prototype.draw = function() {
     cardbutton.textContent = this.string;
     document.body.appendChild(cardbutton);
 }
+
 //make card array; push onto card array
 var cards = [];
 cards.push(new card(30, 100, "Howard", 20, 50));
-cards[0].draw();
+cards.push(new card(30, 100, "Jason", 20, 80));
+for (var i = 0; i < cards.length; ++i) {
+    cards[i].draw();
+}
