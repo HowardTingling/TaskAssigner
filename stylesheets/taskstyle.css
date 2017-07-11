@@ -1,0 +1,9 @@
+input {
+    border: 0;
+    margin-left:.5em;
+    margin-bottom:.5em;
+    padding-left: .5em;
+    outline: 0;
+    background: transparent;
+    border-bottom: 1px solid black;
+}
