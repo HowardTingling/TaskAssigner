@@ -1,3 +1,6 @@
+body {
+    font-family:monospace;
+}
 .text-input {
     border: 0;
     margin-left:.5em;
