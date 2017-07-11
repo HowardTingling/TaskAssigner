@@ -8,11 +8,16 @@
     </head>
     <body>
         <form>
-            Add task:<input type="text" name="firstname" value="Task #1"><br>
+            Add task:<input class="text-input" id="task-box" type="text" name="taskname" value="Task #1">
+            <input type="button" id="task-enter" value="ENTER" class="mybutton" onclick="hitbutton();"/>
         </form>
-        <form>
+        <form class="radio-form">
           <input type="radio" name="interval" value="weekly" checked> Weekly
           <input type="radio" name="interval" value="daily"> Daily
         </form>
+        <?php
+        echo "Hello World!"
+        ?>
     </body>
+    <script src="../scripts/taskpage.js"></script>
 </html>

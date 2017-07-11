@@ -1,4 +1,4 @@
-input {
+.text-input {
     border: 0;
     margin-left:.5em;
     margin-bottom:.5em;
@@ -6,4 +6,17 @@ input {
     outline: 0;
     background: transparent;
     border-bottom: 1px solid black;
+}
+
+.mybutton {
+    border-radius:5px;
+    background:transparent;
+    color:#032301;
+    
+}
+
+.radio-form {
+    border-radius:5px;
+    padding:4px;
+    border:1px dotted #181919;
 }
