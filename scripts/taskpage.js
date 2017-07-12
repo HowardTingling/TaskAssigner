@@ -1,26 +1,38 @@
+var divlist = [];
+
 function printspace(offset, htmltag) {
     for(var space=0; space<offset; space++) {
         htmltag.innerHTML+="&nbsp";
     }
 }
+
+function createbutton(innerhtml){
+    var buttontag = document.createElement("button");
+    buttontag.setAttribute("type", "button");
+    buttontag.className = "circlebutton";
+    buttontag.innerHTML=innerhtml;
+    return buttontag;
+}
+var parentdiv = document.createElement("div");
+
 /* Days of Week module */
-var weeks = function() {
-    
+var weekcontainer = function(parentdiv) {
+    this.divlist = [];
+    this.weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    for(var i=0; i<this.weekdays.length;++i) {
+        var outerdiv = document.createElement("div");
+        //Set day of week
+        var weekdiv = document.createElement("div");
+        weekdiv.setAttribute("style", "font-size:18px;color:black;font-family:monospace;");
+        weekdiv.appendChild(createbutton("clear"));
+        weekdiv.innerHTML+=this.weekdays[i];
+        this.divlist.push(weekdiv);
+        parentdiv.appendChild(this.divlist[i]);
+    }
 }
-var divlist = [];
-var weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-function creatediv(divhtml) {
-    var fontoffset = 9-divhtml.length
-    var newdiv = document.createElement("div");
-    newdiv.setAttribute("style", "font-size:20px; color:black;font-family:monospace;");
-    printspace(fontoffset, newdiv);
-    newdiv.innerHTML+=(divhtml + ":&nbsp");
-    divlist.push(newdiv);
-    document.body.appendChild(newdiv);
-}
-for (var index=0; index < weekdays.length; index++) {
-    creatediv(weekdays[index]);
-}
+var weekobj = new weekcontainer(parentdiv);
+document.body.appendChild(parentdiv);
+
 
 var tasklist = [];
 document.getElementById("task-box").addEventListener("keyup", function(event) {
