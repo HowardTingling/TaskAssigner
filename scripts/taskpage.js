@@ -1,4 +1,8 @@
 var divlist = [];
+var allclearbtn = document.createElement("button");
+allclearbtn.setAttribute("class", "circlebutton");
+allclearbtn.innerHTML = "Clear ALL";
+document.body.appendChild(allclearbtn);
 
 function printspace(offset, htmltag) {
     for(var space=0; space<offset; space++) {
@@ -6,41 +10,62 @@ function printspace(offset, htmltag) {
     }
 }
 
-function createbutton(innerhtml, weekobj){
+function createbutton(innerhtml, id){
     var buttontag = document.createElement("button");
     buttontag.setAttribute("type", "button");
-    buttontag.onclick = weekobj.clearday();
     buttontag.className = "circlebutton";
+    buttontag.setAttribute("id", id);
+    console.log(id);
     buttontag.innerHTML=innerhtml;
     return buttontag;
 }
 var parentdiv = document.createElement("div");
+parentdiv.setAttribute("id", "root");
 
 /* Days of Week module */
 var weekcontainer = function(parentdiv) {
-    this.divlist = [];
-    this.tasklist = [];
+    this.divlist = []; //list of divs containing each day of the week and related properties
+    this.tasklist = []; //list of possible tasks that were inputted
+    this.taskcount = [];
+    for (var i = 0; i < 7; ++i) {
+        this.taskcount.push(i);
+    }
+    function clearday() {
+        console.log("CALLED");
+        for(var i=0; i<this.divlist.length; ++i) {
+            //Set day of week
+            console.log(this.divlist[i]);
+        }
+        console.log(this.divlist.length);    
+    }
     this.weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     for(var i=0; i<this.weekdays.length;++i) {
-        //Set day of week
+        
+        //div that holds dayofweek AND (later) list of tasks
         var weekdiv = document.createElement("div");
-        weekdiv.setAttribute("style", "font-size:18px;color:black;font-family:monospace;");
-        weekdiv.appendChild(createbutton("clear", this));
-        weekdiv.innerHTML+=this.weekdays[i];
+        //container with day of week as inner html
+        var dayofweek = document.createElement("span");
+        var buttontag = createbutton("clear", this.weekdays[i] + "btn");
+        dayofweek.setAttribute("style", "font-size:18px;color:black;font-family:monospace;");
+        dayofweek.appendChild(buttontag);
+        dayofweek.innerHTML+=this.weekdays[i];
+        weekdiv.setAttribute("id", this.weekdays[i]);
+        weekdiv.appendChild(dayofweek);
+        
         this.divlist.push(weekdiv);
+        //console.log(this.divlist[i]);
         parentdiv.appendChild(this.divlist[i]);
     }
+
 }
 weekcontainer.prototype.clearday = function() {
-    for (var i=0; i < this.weekdays; ++i) {
-        this.innerHTML = "";
-        this.divlist[i] = "";
-        this.divlist[i].appendChild(createbutton("clear"));
-        this.divlist[i].innerHTML = this.weekdays[i];
-    }
+    
 }
+
 var weekobj = new weekcontainer(parentdiv);
 document.body.appendChild(parentdiv);
+
+
 
 document.getElementById("task-box").addEventListener("keyup", function(event) {
     event.preventDefault();
@@ -69,4 +94,16 @@ function hitbutton() {
     for (var index=0; index < tasklist.length; index++) {
         console.log(tasklist[index]);
     }
+}
+
+var createfn = function (i) {
+    return function() {
+      console.log(i + " IN LISTENER");
+    };
+}
+
+for (var i=0; i < weekobj.weekdays.length; ++i) {
+    console.log(weekobj.weekdays[i] + "btn");
+    console.log(i + "before eventlistener");
+    document.getElementById(weekobj.weekdays[i] + "btn").addEventListener("click", createfn(i));
 }
