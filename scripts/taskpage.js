@@ -96,14 +96,27 @@ function hitbutton() {
     }
 }
 
-var createfn = function (i) {
+/*Set such that on clicking clear next to day of week removes all tasks from that day*/
+var cleartask = function (i) {
     return function() {
-      console.log(i + " IN LISTENER");
+        console.log("Before: " + weekobj.divlist[i].childNodes.length);
+        while(weekobj.divlist[i].childNodes.length > 1) {
+            weekobj.divlist[i].removeChild(weekobj.divlist[i].lastChild);
+        }
+        console.log("After: " + weekobj.divlist[i].childNodes.length);
     };
 }
 
 for (var i=0; i < weekobj.weekdays.length; ++i) {
     console.log(weekobj.weekdays[i] + "btn");
     console.log(i + "before eventlistener");
-    document.getElementById(weekobj.weekdays[i] + "btn").addEventListener("click", createfn(i));
+    document.getElementById(weekobj.weekdays[i] + "btn").addEventListener("click", cleartask(i));
 }
+
+allclearbtn.addEventListener("click", function() {
+    for (var i=0; i<weekobj.weekdays.length; ++i) {
+        while(weekobj.divlist[i].childNodes.length > 1) {
+            weekobj.divlist[i].removeChild(weekobj.divlist[i].lastChild);
+        }
+    }
+});
