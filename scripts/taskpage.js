@@ -19,7 +19,6 @@ function createbutton(innerhtml, id){
     buttontag.setAttribute("type", "button");
     buttontag.className = "circlebutton";
     buttontag.setAttribute("id", id);
-    console.log(id);
     buttontag.innerHTML=innerhtml;
     return buttontag;
 }
@@ -63,13 +62,11 @@ var weekcontainer = function(parentdiv) {
 
 }
 weekcontainer.prototype.clearday = function() {
-    
+    console.log("BAH");
 }
 
 var weekobj = new weekcontainer(parentdiv);
 document.body.appendChild(parentdiv);
-
-
 
 document.getElementById("task-box").addEventListener("keyup", function(event) {
     event.preventDefault();
@@ -81,33 +78,31 @@ document.getElementById("task-box").addEventListener("keyup", function(event) {
 var displaycount = 0;
 var numtasks = 2;
 function randomizetasks() {
-    var divlist = weekobj.divlist;
-    var tasklist = weekobj.tasklist;
-    var val = document.getElementById("task-box").value;
-    tasklist.push(val);
-    var divindex = 0;
-    var taskdiv = document.createElement("container");
-    taskdiv.innerHTML+="<br>";
-    printspace(5, taskdiv);
-    taskdiv.innerHTML+= val;
-    while (divlist[divindex].childNodes.length == numtasks) {
-        ++divindex;
-        if (!divlist[divindex]) {
-            ++numtasks
+    clearassignment();
+    numtasks = 2;
+    console.log("displaycount:" + displaycount + ", numtasks:" + numtasks);
+    var divindex = Math.floor(Math.random() * 7);
+    for (var i=0; i < weekobj.tasklist.length; ++i) {
+        console.log("BEFORE: " + weekobj.divlist[divindex] + " :" + weekobj.divlist[divindex].childNodes.length);
+        while (weekobj.divlist[divindex].childNodes.length >= numtasks) {
+            divindex = Math.floor(Math.random() * 7);
+        }
+        console.log("AFTER: " + weekobj.divlist[divindex] + " :" + weekobj.divlist[divindex].childNodes.length);
+        weekobj.divlist[divindex].appendChild(weekobj.tasklist[i]);
+        ++displaycount;
+        divindex = Math.floor(Math.random() * 7);
+        if (displaycount==weekobj.tasklist.length) {
+            displaycount = 0;
+            ++numtasks;
         }
     }
-    divlist[divindex].appendChild(taskdiv);
-    for (var index=0; index < tasklist.length; index++) {
-        console.log(tasklist[index]);
-    }
-    console.log("Bweh");
 }
-
-function ordertasks() {
+function assigntasks() {
+    numtasks=2;
     var divlist = weekobj.divlist;
     var tasklist = weekobj.tasklist;
     var val = document.getElementById("task-box").value;
-    tasklist.push(val);
+    //tasklist.push(val);
     var divindex = 0;
     var taskdiv = document.createElement("container");
     taskdiv.innerHTML+="<br>";
@@ -119,7 +114,8 @@ function ordertasks() {
             ++numtasks
         }
     }
-    divlist[divindex].appendChild(taskdiv);
+    tasklist.push(taskdiv);
+    divlist[divindex].appendChild(tasklist[tasklist.length - 1]);
     for (var index=0; index < tasklist.length; index++) {
         console.log(tasklist[index]);
     }
@@ -137,19 +133,21 @@ var cleartask = function (i) {
 }
 
 for (var i=0; i < weekobj.weekdays.length; ++i) {
-    console.log(weekobj.weekdays[i] + "btn");
-    console.log(i + "before eventlistener");
     document.getElementById(weekobj.weekdays[i] + "btn").addEventListener("click", cleartask(i));
 }
 
-allclearbtn.addEventListener("click", function() {
+var clearassignment = function() {
     for (var i=0; i<weekobj.weekdays.length; ++i) {
         while(weekobj.divlist[i].childNodes.length > 1) {
             weekobj.divlist[i].removeChild(weekobj.divlist[i].lastChild);
         }
     }
-});
+}
 
-randomizebtn.addEventListener("click", function() {
-    randomizetasks();
-});
+var clearall = function() {
+    clearassignment();
+    weekobj.tasklist.length = 0;
+}
+
+allclearbtn.addEventListener("click", clearall);
+randomizebtn.setAttribute("onclick", "randomizetasks();");
