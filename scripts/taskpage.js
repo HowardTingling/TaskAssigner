@@ -67,24 +67,24 @@ weekcontainer.prototype.clearday = function() {
 
 var weekobj = new weekcontainer(parentdiv);
 document.body.appendChild(parentdiv);
-
+/*
 document.getElementById("task-box").addEventListener("keyup", function(event) {
     event.preventDefault();
     if (event.keyCode == 13) {
         document.getElementById("task-enter").click();
     }
 });
-
+*/
 var displaycount = 0;
-var numtasks = 2;
+var taskcapacity = 2;
 function randomizetasks() {
     clearassignment();
-    numtasks = 2;
-    console.log("displaycount:" + displaycount + ", numtasks:" + numtasks);
+    taskcapacity = 2;
+    console.log("displaycount:" + displaycount + ", taskcapacity:" + taskcapacity);
     var divindex = Math.floor(Math.random() * 7);
     for (var i=0; i < weekobj.tasklist.length; ++i) {
         console.log("BEFORE: " + weekobj.divlist[divindex] + " :" + weekobj.divlist[divindex].childNodes.length);
-        while (weekobj.divlist[divindex].childNodes.length >= numtasks) {
+        while (weekobj.divlist[divindex].childNodes.length >= taskcapacity) {
             divindex = Math.floor(Math.random() * 7);
         }
         console.log("AFTER: " + weekobj.divlist[divindex] + " :" + weekobj.divlist[divindex].childNodes.length);
@@ -93,12 +93,12 @@ function randomizetasks() {
         divindex = Math.floor(Math.random() * 7);
         if (displaycount==weekobj.tasklist.length) {
             displaycount = 0;
-            ++numtasks;
+            ++taskcapacity;
         }
     }
 }
 function assigntasks() {
-    numtasks=2;
+    taskcapacity=2;
     var divlist = weekobj.divlist;
     var tasklist = weekobj.tasklist;
     var val = document.getElementById("task-box").value;
@@ -108,10 +108,11 @@ function assigntasks() {
     taskdiv.innerHTML+="<br>";
     printspace(5, taskdiv);
     taskdiv.innerHTML+= val;
-    while (divlist[divindex].childNodes.length == numtasks) {
+    while (divlist[divindex].childNodes.length >= taskcapacity) {
         ++divindex;
         if (!divlist[divindex]) {
-            ++numtasks
+            ++taskcapacity
+            divindex=0;
         }
     }
     tasklist.push(taskdiv);
@@ -119,6 +120,7 @@ function assigntasks() {
     for (var index=0; index < tasklist.length; index++) {
         console.log(tasklist[index]);
     }
+    return false;
 }
 
 /*Set such that on clicking clear next to day of week removes all tasks from that day*/

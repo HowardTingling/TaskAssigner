@@ -7,10 +7,16 @@
         
     </head>
     <body>
+        <form onsubmit="return assigntasks();">
+           Add task:<input class="text-input" id="task-box" type="text" name="taskname" value="Task #1"/>
+           <button type="submit" id="task-enter" value="ENTER" class="mybutton">ENTER</button>
+        </form>
+        <!-- alternative way of doing the form button 
         <form>
             Add task:<input class="text-input" id="task-box" type="text" name="taskname" value="Task #1">
             <input type="button" id="task-enter" value="ENTER" class="mybutton" onclick="assigntasks();"/>
         </form>
+        -->
         <form class="radio-form">
           <input type="radio" name="interval" value="weekly" checked> Weekly
           <input type="radio" name="interval" value="daily"> Daily
