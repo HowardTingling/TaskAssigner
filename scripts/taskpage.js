@@ -14,6 +14,12 @@ function printspace(offset, htmltag) {
     }
 }
 
+function zeroarray(array) {
+    for (var index = 0; index < array.length; ++index) {
+        array[index] = 0;
+    }
+}
+
 function createbutton(innerhtml, id){
     var buttontag = document.createElement("button");
     buttontag.setAttribute("type", "button");
@@ -61,44 +67,33 @@ var weekcontainer = function(parentdiv) {
     }
 
 }
-weekcontainer.prototype.clearday = function() {
-    console.log("BAH");
-}
 
 var weekobj = new weekcontainer(parentdiv);
 document.body.appendChild(parentdiv);
-/*
-document.getElementById("task-box").addEventListener("keyup", function(event) {
-    event.preventDefault();
-    if (event.keyCode == 13) {
-        document.getElementById("task-enter").click();
-    }
-});
-*/
-var displaycount = 0;
-var taskcapacity = 2;
+
 function randomizetasks() {
+    var numdays = weekobj.weekdays.length;
+    var isassigned = [];
+    for (var i=0; i < numdays; ++i) {
+        isassigned[i] = 0;
+    }
     clearassignment();
-    taskcapacity = 2;
-    console.log("displaycount:" + displaycount + ", taskcapacity:" + taskcapacity);
-    var divindex = Math.floor(Math.random() * 7);
+    var numassigned = 0;
     for (var i=0; i < weekobj.tasklist.length; ++i) {
-        console.log("BEFORE: " + weekobj.divlist[divindex] + " :" + weekobj.divlist[divindex].childNodes.length);
-        while (weekobj.divlist[divindex].childNodes.length >= taskcapacity) {
-            divindex = Math.floor(Math.random() * 7);
+        var divindex = Math.floor(Math.random() * numdays);
+        while (isassigned[divindex]) {
+            divindex = Math.floor(Math.random() * numdays);
         }
-        console.log("AFTER: " + weekobj.divlist[divindex] + " :" + weekobj.divlist[divindex].childNodes.length);
+        isassigned[divindex] = 1;
+        ++numassigned;
+        if (numassigned % numdays == 0) {
+            zeroarray(isassigned);
+        }
         weekobj.divlist[divindex].appendChild(weekobj.tasklist[i]);
-        ++displaycount;
-        divindex = Math.floor(Math.random() * 7);
-        if (displaycount==weekobj.tasklist.length) {
-            displaycount = 0;
-            ++taskcapacity;
-        }
     }
 }
 function assigntasks() {
-    taskcapacity=2;
+    var taskcapacity=2;
     var divlist = weekobj.divlist;
     var tasklist = weekobj.tasklist;
     var val = document.getElementById("task-box").value;
