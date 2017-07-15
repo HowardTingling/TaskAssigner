@@ -55,7 +55,6 @@ var weekcontainer = function() {
         daydiv.appendChild(dayofweek);
         var dayobj = new daycontainer(daydiv);
         this.divlist.push(dayobj);
-        
         this.parentdiv.appendChild(this.divlist[i].daydiv);
     }
 }
@@ -104,21 +103,25 @@ function assigntasks() {
         }
     }
     tasklist.push(taskdiv);
+    divlist[divindex].tasks.push(taskdiv);
     divlist[divindex].daydiv.appendChild(tasklist[tasklist.length - 1]);
-    for (var index=0; index < tasklist.length; index++) {
-        console.log(tasklist[index]);
-    }
+    divlist[divindex].taskpositions.push(tasklist.length - 1);
     return false;
 }
 
 /*Set such that on clicking clear next to day of week removes all tasks from that day*/
 var cleartask = function (i) {
     return function() {
-        console.log("Before: " + weekobj.divlist[i].daydiv.childNodes.length);
         while(weekobj.divlist[i].daydiv.childNodes.length > 1) {
+            //Clear children of daydiv, tasks and taskpositions
             weekobj.divlist[i].daydiv.removeChild(weekobj.divlist[i].daydiv.lastChild);
         }
-        console.log("After: " + weekobj.divlist[i].daydiv.childNodes.length);
+        for (var posindex = 0; posindex < weekobj.divlist[i].taskpositions.length; ++posindex) {
+            weekobj.tasklist[weekobj.divlist[i].taskpositions[posindex]] = null;
+            
+        }
+        weekobj.divlist[i].tasks.splice(0, weekobj.divlist[i].tasks.length)
+        weekobj.divlist[i].taskpositions.length = 0;
     };
 }
 
