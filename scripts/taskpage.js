@@ -136,6 +136,7 @@ for (var i=0; i < weekobj.weekdays.length; ++i) {
 var clearassignment = function() {
     for (var i=0; i<weekobj.weekdays.length; ++i) {
         while(weekobj.divlist[i].childNodes.length > 1) {
+            
             weekobj.divlist[i].removeChild(weekobj.divlist[i].lastChild);
         }
     }
