@@ -28,48 +28,40 @@ function createbutton(innerhtml, id){
     buttontag.innerHTML=innerhtml;
     return buttontag;
 }
-var parentdiv = document.createElement("div");
-parentdiv.setAttribute("id", "root");
 
 /* Days of Week module */
-var weekcontainer = function(parentdiv) {
+var daycontainer = function(daydiv) {
+    this.tasks = []
+    this.taskpositions = []
+    this.daydiv = daydiv;
+}
+
+var weekcontainer = function() {
+    this.parentdiv = document.createElement("div");
+    this.parentdiv.setAttribute("id", "root");
     this.divlist = []; //list of divs containing each day of the week and related properties
     this.tasklist = []; //list of possible tasks that were inputted
-    this.taskcount = [];
-    for (var i = 0; i < 7; ++i) {
-        this.taskcount.push(i);
-    }
-    function clearday() {
-        console.log("CALLED");
-        for(var i=0; i<this.divlist.length; ++i) {
-            //Set day of week
-            console.log(this.divlist[i]);
-        }
-        console.log(this.divlist.length);    
-    }
     this.weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     for(var i=0; i<this.weekdays.length;++i) {
-        
         //div that holds dayofweek AND (later) list of tasks
-        var weekdiv = document.createElement("div");
+        var daydiv = document.createElement("div");
         //container with day of week as inner html
         var dayofweek = document.createElement("span");
         var buttontag = createbutton("clear", this.weekdays[i] + "btn");
         dayofweek.setAttribute("style", "font-size:18px;color:black;font-family:monospace;");
         dayofweek.appendChild(buttontag);
         dayofweek.innerHTML+=this.weekdays[i];
-        weekdiv.setAttribute("id", this.weekdays[i]);
-        weekdiv.appendChild(dayofweek);
+        daydiv.setAttribute("id", this.weekdays[i]);
+        daydiv.appendChild(dayofweek);
+        var dayobj = new daycontainer(daydiv);
+        this.divlist.push(dayobj);
         
-        this.divlist.push(weekdiv);
-        //console.log(this.divlist[i]);
-        parentdiv.appendChild(this.divlist[i]);
+        this.parentdiv.appendChild(this.divlist[i].daydiv);
     }
-
 }
 
-var weekobj = new weekcontainer(parentdiv);
-document.body.appendChild(parentdiv);
+var weekobj = new weekcontainer();
+document.body.appendChild(weekobj.parentdiv);
 
 function randomizetasks() {
     var numdays = weekobj.weekdays.length;
@@ -89,9 +81,10 @@ function randomizetasks() {
         if (numassigned % numdays == 0) {
             zeroarray(isassigned);
         }
-        weekobj.divlist[divindex].appendChild(weekobj.tasklist[i]);
+        weekobj.divlist[divindex].daydiv.appendChild(weekobj.tasklist[i]);
     }
 }
+
 function assigntasks() {
     var taskcapacity=2;
     var divlist = weekobj.divlist;
@@ -103,15 +96,15 @@ function assigntasks() {
     taskdiv.innerHTML+="<br>";
     printspace(5, taskdiv);
     taskdiv.innerHTML+= val;
-    while (divlist[divindex].childNodes.length >= taskcapacity) {
+    while (divlist[divindex].daydiv.childNodes.length >= taskcapacity) {
         ++divindex;
-        if (!divlist[divindex]) {
+        if (!divlist[divindex].daydiv) {
             ++taskcapacity
             divindex=0;
         }
     }
     tasklist.push(taskdiv);
-    divlist[divindex].appendChild(tasklist[tasklist.length - 1]);
+    divlist[divindex].daydiv.appendChild(tasklist[tasklist.length - 1]);
     for (var index=0; index < tasklist.length; index++) {
         console.log(tasklist[index]);
     }
@@ -121,11 +114,11 @@ function assigntasks() {
 /*Set such that on clicking clear next to day of week removes all tasks from that day*/
 var cleartask = function (i) {
     return function() {
-        console.log("Before: " + weekobj.divlist[i].childNodes.length);
-        while(weekobj.divlist[i].childNodes.length > 1) {
-            weekobj.divlist[i].removeChild(weekobj.divlist[i].lastChild);
+        console.log("Before: " + weekobj.divlist[i].daydiv.childNodes.length);
+        while(weekobj.divlist[i].daydiv.childNodes.length > 1) {
+            weekobj.divlist[i].daydiv.removeChild(weekobj.divlist[i].daydiv.lastChild);
         }
-        console.log("After: " + weekobj.divlist[i].childNodes.length);
+        console.log("After: " + weekobj.divlist[i].daydiv.childNodes.length);
     };
 }
 
@@ -135,9 +128,9 @@ for (var i=0; i < weekobj.weekdays.length; ++i) {
 
 var clearassignment = function() {
     for (var i=0; i<weekobj.weekdays.length; ++i) {
-        while(weekobj.divlist[i].childNodes.length > 1) {
+        while(weekobj.divlist[i].daydiv.childNodes.length > 1) {
             
-            weekobj.divlist[i].removeChild(weekobj.divlist[i].lastChild);
+            weekobj.divlist[i].daydiv.removeChild(weekobj.divlist[i].daydiv.lastChild);
         }
     }
 }
