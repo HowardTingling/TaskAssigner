@@ -14,6 +14,13 @@ function printspace(offset, htmltag) {
     }
 }
 
+function logarray(array) {
+    for (var index = 0; index < array.length; ++index) {
+        console.log("index: " + array[index]);
+    }
+    console.log("SEPARATOR");
+}
+
 function setallzero(array) {
     for (var index = 0; index < array.length; ++index) {
         array[index] = 0;
@@ -31,6 +38,12 @@ function isalltrue(array) {
     return (result === array.length);
 }
 
+function cleararray(array) {
+    for (var iter = 0; iter < array.length; ++iter) {
+        array.pop();
+    }
+}
+
 function createbutton(innerhtml, id){
     var buttontag = document.createElement("button");
     buttontag.setAttribute("type", "button");
@@ -41,10 +54,10 @@ function createbutton(innerhtml, id){
 }
 
 /* Days of Week module */
-var daycontainer = function(daydiv) {
+var daycontainer = function() {
     this.tasks = []
     this.taskpositions = []
-    this.daydiv = daydiv;
+    this.daydiv;
 }
 
 var weekcontainer = function() {
@@ -69,7 +82,8 @@ var weekcontainer = function() {
         dayofweek.innerHTML+=this.weekdays[i];
         daydiv.setAttribute("id", this.weekdays[i]);
         daydiv.appendChild(dayofweek);
-        var dayobj = new daycontainer(daydiv);
+        var dayobj = new daycontainer();
+        dayobj.daydiv = daydiv;
         this.divlist.push(dayobj);
         this.parentdiv.appendChild(dayobj.daydiv);
     }
@@ -78,6 +92,7 @@ var weekcontainer = function() {
 var weekobj = new weekcontainer();
 document.body.appendChild(weekobj.parentdiv);
 
+//numdays schema faster
 function randomizetasks() {
     setallzero(weekobj.isassigned);
     var isassigned = weekobj.isassigned;
@@ -95,6 +110,8 @@ function randomizetasks() {
             setallzero(isassigned);
         }
         weekobj.divlist[divindex].daydiv.appendChild(weekobj.tasklist[i]);
+        weekobj.divlist[divindex].taskpositions.push(i);
+        weekobj.divlist[divindex].tasks.push(weekobj.tasklist[i]);
     }
 }
 
@@ -119,6 +136,7 @@ function assigntasks() {
     divlist[divindex].tasks.push(taskdiv);
     divlist[divindex].daydiv.appendChild(tasklist[tasklist.length - 1]);
     divlist[divindex].taskpositions.push(tasklist.length - 1);
+    logarray(divlist[divindex].taskpositions);
     return false;
 }
 
@@ -130,11 +148,14 @@ var cleartask = function (i) {
             weekobj.divlist[i].daydiv.removeChild(weekobj.divlist[i].daydiv.lastChild);
         }
         for (var posindex = 0; posindex < weekobj.divlist[i].taskpositions.length; ++posindex) {
-            //weekobj.tasklist[weekobj.divlist[i].taskpositions[posindex]] = null;
-            console.log(weekobj.divlist[i].taskpositions[posindex]);
+            weekobj.tasklist[weekobj.divlist[i].taskpositions[posindex]] = -1;
+            //console.log(weekobj.divlist[i].taskpositions[posindex]);
         }
-        weekobj.divlist[i].tasks.splice(0, weekobj.divlist[i].tasks.length)
-        weekobj.divlist[i].taskpositions.length = 0;
+        //The following two are effectively the same in clearing an array.
+        console.log(weekobj.divlist[i].tasks.length);
+        weekobj.divlist[i].tasks.splice(0, weekobj.divlist[i].tasks.length);
+        console.log(weekobj.divlist[i].tasks.length);
+        cleararray(weekobj.divlist[i].taskpositions);
     };
 }
 
@@ -147,12 +168,15 @@ var clearassignment = function() {
         while(weekobj.divlist[i].daydiv.childNodes.length > 1) {
             weekobj.divlist[i].daydiv.removeChild(weekobj.divlist[i].daydiv.lastChild);
         }
+        cleararray(weekobj.divlist[i].tasks);
+        cleararray(weekobj.divlist[i].taskpositions);
     }
 }
 
 var clearall = function() {
     clearassignment();
     weekobj.tasklist.length = 0;
+    setallzero(weekobj.isassigned);
 }
 
 allclearbtn.addEventListener("click", clearall);
