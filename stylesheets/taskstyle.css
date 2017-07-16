@@ -1,6 +1,19 @@
 body {
     font-family:monospace;
 }
+
+.container {
+    font-size: 18px;
+    font-family: monospace;
+    color:black;
+}
+
+.item {
+    font-size: 16px;
+    font-family: monospace;
+    color:black;
+}
+
 .text-input {
     border: 0;
     margin-left:.5em;
