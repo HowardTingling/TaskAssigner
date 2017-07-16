@@ -14,10 +14,21 @@ function printspace(offset, htmltag) {
     }
 }
 
-function zeroarray(array) {
+function setallzero(array) {
     for (var index = 0; index < array.length; ++index) {
         array[index] = 0;
     }
+}
+
+
+function isalltrue(array) {
+    var result = 0;
+    for (var index = 0; index < array.length; ++index) {
+        if (array[index]) {
+            result += 1;
+        }
+    }
+    return (result === array.length);
 }
 
 function createbutton(innerhtml, id){
@@ -37,11 +48,16 @@ var daycontainer = function(daydiv) {
 }
 
 var weekcontainer = function() {
+    this.weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    // use isassigned to check if random index is already used
+    // if all indices have been assigned, then reset isassigned.
+    this.isassigned = [];
+    this.isassigned.length = this.weekdays.length 
+    setallzero(this.isassigned);
     this.parentdiv = document.createElement("div");
     this.parentdiv.setAttribute("id", "root");
     this.divlist = []; //list of divs containing each day of the week and related properties
     this.tasklist = []; //list of possible tasks that were inputted
-    this.weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     for(var i=0; i<this.weekdays.length;++i) {
         //div that holds dayofweek AND (later) list of tasks
         var daydiv = document.createElement("div");
@@ -55,7 +71,7 @@ var weekcontainer = function() {
         daydiv.appendChild(dayofweek);
         var dayobj = new daycontainer(daydiv);
         this.divlist.push(dayobj);
-        this.parentdiv.appendChild(this.divlist[i].daydiv);
+        this.parentdiv.appendChild(dayobj.daydiv);
     }
 }
 
@@ -63,11 +79,9 @@ var weekobj = new weekcontainer();
 document.body.appendChild(weekobj.parentdiv);
 
 function randomizetasks() {
-    var numdays = weekobj.weekdays.length;
-    var isassigned = [];
-    for (var i=0; i < numdays; ++i) {
-        isassigned[i] = 0;
-    }
+    setallzero(weekobj.isassigned);
+    var isassigned = weekobj.isassigned;
+    var numdays = weekobj.divlist.length;
     clearassignment();
     var numassigned = 0;
     for (var i=0; i < weekobj.tasklist.length; ++i) {
@@ -78,29 +92,28 @@ function randomizetasks() {
         isassigned[divindex] = 1;
         ++numassigned;
         if (numassigned % numdays == 0) {
-            zeroarray(isassigned);
+            setallzero(isassigned);
         }
         weekobj.divlist[divindex].daydiv.appendChild(weekobj.tasklist[i]);
     }
 }
 
 function assigntasks() {
-    var taskcapacity=2;
     var divlist = weekobj.divlist;
     var tasklist = weekobj.tasklist;
-    var val = document.getElementById("task-box").value;
-    //tasklist.push(val);
-    var divindex = 0;
+    //Create floating div with task number; to be assigned under a day of week
     var taskdiv = document.createElement("container");
     taskdiv.innerHTML+="<br>";
     printspace(5, taskdiv);
+    var val = document.getElementById("task-box").value;
     taskdiv.innerHTML+= val;
-    while (divlist[divindex].daydiv.childNodes.length >= taskcapacity) {
-        ++divindex;
-        if (!divlist[divindex].daydiv) {
-            ++taskcapacity
-            divindex=0;
-        }
+    var divindex = Math.floor(Math.random() * weekobj.divlist.length);
+    while (weekobj.isassigned[divindex]) {
+        divindex = Math.floor(Math.random() * weekobj.divlist.length);
+    }
+    weekobj.isassigned[divindex] = true;
+    if (isalltrue(weekobj.isassigned)) {
+        setallzero(weekobj.isassigned);
     }
     tasklist.push(taskdiv);
     divlist[divindex].tasks.push(taskdiv);
@@ -117,8 +130,8 @@ var cleartask = function (i) {
             weekobj.divlist[i].daydiv.removeChild(weekobj.divlist[i].daydiv.lastChild);
         }
         for (var posindex = 0; posindex < weekobj.divlist[i].taskpositions.length; ++posindex) {
-            weekobj.tasklist[weekobj.divlist[i].taskpositions[posindex]] = null;
-            
+            //weekobj.tasklist[weekobj.divlist[i].taskpositions[posindex]] = null;
+            console.log(weekobj.divlist[i].taskpositions[posindex]);
         }
         weekobj.divlist[i].tasks.splice(0, weekobj.divlist[i].tasks.length)
         weekobj.divlist[i].taskpositions.length = 0;
@@ -132,7 +145,6 @@ for (var i=0; i < weekobj.weekdays.length; ++i) {
 var clearassignment = function() {
     for (var i=0; i<weekobj.weekdays.length; ++i) {
         while(weekobj.divlist[i].daydiv.childNodes.length > 1) {
-            
             weekobj.divlist[i].daydiv.removeChild(weekobj.divlist[i].daydiv.lastChild);
         }
     }
