@@ -24,6 +24,11 @@ body {
     border-bottom: 1px solid black;
 }
 
+.bluebutton {
+    background:#0061ff;
+    color: white;
+}
+
 .circlebutton {
     margin-right:5px;
     border-radius:100px;

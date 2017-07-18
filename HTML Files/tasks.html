@@ -11,7 +11,7 @@
            Add task:<input class="text-input" id="task-box" type="text" name="taskname" value="Task #1"/>
            <button type="submit" id="task-enter" value="ENTER" class="mybutton">ENTER</button>
         </form>
-        <form onsubmit="return assigntask();">
+        <form onsubmit="return assignnames();">
            Add Name:<input class="text-input" id="name-box" type="text" name="personname" value="Person #1"/>
            <button type="submit" id="name-enter" value="ENTER" class="mybutton">ENTER</button>
         </form>
@@ -26,6 +26,9 @@
           <input type="radio" name="interval" value="daily"> Daily
         </form>
         <div id="week"></div>
+        <button class="circlebutton" id="allclearbtn">Clear ALL</button>
+        <button class="bluebutton" id="randomizebtn">Randomize Tasks</button>
+        <button id="testbtn">test</button>
     </body>
     <script src="../scripts/taskpage.js"></script>
 </html>

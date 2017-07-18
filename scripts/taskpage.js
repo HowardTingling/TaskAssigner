@@ -1,15 +1,8 @@
 var mintextsize = 16;
 var maxtextsize = 20;
-var namelist = [];
-var allclearbtn = document.createElement("button");
-allclearbtn.setAttribute("class", "circlebutton");
-allclearbtn.innerHTML = "Clear ALL";
-var randomizebtn = document.createElement("button");
-randomizebtn.setAttribute("class", "circlebutton");
-randomizebtn.innerHTML = "Randomize Tasks";
-document.body.appendChild(allclearbtn);
-document.body.appendChild(randomizebtn);
-
+var allclearbtn = document.getElementById("allclearbtn");
+var randomizebtn = document.getElementById("randomizebtn");
+var testbtn = document.getElementById("testbtn");
 function printspace(offset, htmltag) {
     for(var space=0; space<offset; space++) {
         htmltag.innerHTML+="&nbsp";
@@ -18,7 +11,7 @@ function printspace(offset, htmltag) {
 
 function logarray(array) {
     for (var index = 0; index < array.length; ++index) {
-        console.log("index: " + array[index]);
+        console.log(index + ": " + array[index]);
     }
     console.log("SEPARATOR");
 }
@@ -212,5 +205,13 @@ var clearall = function() {
     setallzero(nameobj.isassigned);
 }
 
+var loglists = function(namelist, tasklist) {
+    logarray(namelist);
+    logarray(tasklist);
+}
+
 allclearbtn.addEventListener("click", clearall);
 randomizebtn.setAttribute("onclick", "randomizetasks();");
+testbtn.addEventListener("click", function() {
+    loglists(nameobj.names, nameobj.tasks);
+});
