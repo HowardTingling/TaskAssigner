@@ -161,19 +161,7 @@ function assigntask() {
     //Create floating div with task number; to be assigned under a day of week
     var val = document.getElementById("task-box").value;
     nameobj.tasks.push(val);
-    var taskdiv = new createhtmlelement("span", "<br>" + val, "item");
-    var divindex = Math.floor(Math.random() * nameobj.namelist.length);
-    while (nameobj.isassigned[divindex]) {
-        divindex = Math.floor(Math.random() * nameobj.namelist.length);
-    }
-    nameobj.isassigned[divindex] = true;
-    if (isalltrue(nameobj.isassigned)) {
-        setallzero(nameobj.isassigned);
-    }
-    tasklist.push(taskdiv.newelement);
-    namelist[divindex].tasks.push(taskdiv.newelement);
-    namelist[divindex].namediv.appendChild(tasklist[tasklist.length - 1]);
-    namelist[divindex].taskpositions.push(tasklist.length - 1);
+    console.log(nameobj.tasks[nameobj.tasks.length-1]);
     return false;
 }
 
@@ -183,19 +171,7 @@ function assignnames() {
     //Create floating div with task number; to be assigned under a day of week
     var val = document.getElementById("name-box").value;
     nameobj.names.push(val);
-    var taskdiv = new createhtmlelement("span", "<br>" + val, "item");
-    var divindex = Math.floor(Math.random() * nameobj.namelist.length);
-    while (nameobj.isassigned[divindex]) {
-        divindex = Math.floor(Math.random() * nameobj.namelist.length);
-    }
-    nameobj.isassigned[divindex] = true;
-    if (isalltrue(nameobj.isassigned)) {
-        setallzero(nameobj.isassigned);
-    }
-    tasklist.push(taskdiv.newelement);
-    namelist[divindex].tasks.push(taskdiv.newelement);
-    namelist[divindex].namediv.appendChild(tasklist[tasklist.length - 1]);
-    namelist[divindex].taskpositions.push(tasklist.length - 1);
+    console.log(nameobj.names[nameobj.names.length-1]);
     return false;
 }
 
