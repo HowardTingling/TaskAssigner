@@ -3,6 +3,8 @@ var maxtextsize = 20;
 var allclearbtn = document.getElementById("allclearbtn");
 var randomizebtn = document.getElementById("randomizebtn");
 var testbtn = document.getElementById("testbtn");
+var tasktopeople = document.getElementById("tasktopeople");
+var peopletotask = document.getElementById("peopletotask");
 function printspace(offset, htmltag) {
     for(var space=0; space<offset; space++) {
         htmltag.innerHTML+="&nbsp";
@@ -98,6 +100,10 @@ var namecontainer = function() {
 }
 
 var htmlcontainer = function() {
+    this.tasktopeople = tasktopeople.checked;
+    this.peopletotask = peopletotask.checked;
+    this.peopletotask = document.getElementById("peopletotask");
+    
     this.parentdiv =  document.createElement("div");
     this.nameshtmllist = []; //contains html elems of names
     this.taskshtmllist = []; //contains html elems of tasks
@@ -167,12 +173,19 @@ function randomizetasks() {
         if (numassigned % numpeople == 0) {
             setallzero(isassigned);
         }
-        setparent(nameobj.nameshtmllist[divindex], nameobj.taskshtmllist[i]);
+        if (nameobj.tasktopeople) {
+            setparent(nameobj.nameshtmllist[divindex], nameobj.taskshtmllist[i]);
+        } else {
+            setparent(nameobj.taskshtmllist[i], nameobj.nameshtmllist[divindex]);
+        }
     }
-    for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
-        nameobj.parentdiv.appendChild(nameobj.nameshtmllist[i].htmlelement);
-        for (var j = 0; j < nameobj.nameshtmllist[i].childrenhtml.length; ++j) {
-            //nameobj.nameshtmllist[i].childrenhtml[j]
+    if (nameobj.tasktopeople) {
+        for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
+            nameobj.parentdiv.appendChild(nameobj.nameshtmllist[i].htmlelement);
+        }
+    } else {
+        for (var i = 0; i < nameobj.taskshtmllist.length; ++i) {
+            nameobj.parentdiv.appendChild(nameobj.taskshtmllist[i].htmlelement);
         }
     }
 }
@@ -235,8 +248,13 @@ var loglists = function(namelist, tasklist) {
     logarray(tasklist);
 }
 
+var updateradiobtns = function() {
+    nameobj.peopletotask = peopletotask.checked;
+    nameobj.tasktopeople = tasktopeople.checked;
+    console.log(nameobj.peopletotask);
+}
+
 allclearbtn.addEventListener("click", clearall);
 randomizebtn.setAttribute("onclick", "randomizetasks();");
-testbtn.addEventListener("click", function() {
-    loglists(nameobj.names, nameobj.tasks);
-});
+tasktopeople.addEventListener("click", updateradiobtns);
+peopletotask.addEventListener("click", updateradiobtns);
