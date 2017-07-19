@@ -34,6 +34,7 @@ function isalltrue(array) {
 }
 
 function cleararray(array) {
+    console.log("hi" + array);
     for (var iter = 0; iter < array.length; ++iter) {
         array.pop();
     }
@@ -87,8 +88,8 @@ var setparent = function(parenthtmlobj, childhtmlobj) {
 
 /* Days of Week module*/
 var namecontainer = function() {
-    this.tasks = []
-    this.taskpositions = []
+    this.tasks = [];
+    this.taskpositions = [];
     this.namediv;
 }
 
@@ -131,7 +132,8 @@ function randomizetasks() {
     var isassigned = nameobj.isassigned;
     setallzero(isassigned);
     var numpeople = nameobj.names.length;
-    nameobj.parentdiv.innerHTML = "";
+    nameobj.nameshtmllist.length = 0;
+    nameobj.taskshtmllist.length = 0;
     //clearassignment();
     var numassigned = 0;
     //create html divs for each person and push onto nameshtmllist
@@ -140,7 +142,7 @@ function randomizetasks() {
     }
     //create html tags for each task and push onto taskshtmllist
     for (var i = 0; i < nameobj.tasks.length; ++i) {
-        nameobj.taskshtmllist.push(new createhtmlelement("span", nameobj.tasks[i], "item", "items" + i));
+        nameobj.taskshtmllist.push(new createhtmlelement("div", nameobj.tasks[i], "item", "items" + i));
     }
     for (var i=0; i < nameobj.tasks.length; ++i) {
         var divindex = Math.floor(Math.random() * numpeople);
@@ -160,7 +162,6 @@ function randomizetasks() {
             //nameobj.nameshtmllist[i].childrenhtml[j]
         }
     }
-    document.body.appendChild(nameobj.parentdiv);
 }
 
 function assigntask() {

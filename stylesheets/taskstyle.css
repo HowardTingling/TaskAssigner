@@ -25,6 +25,7 @@ body {
 }
 
 .bluebutton {
+    border-radius: 100px;
     background:#0061ff;
     color: white;
 }
