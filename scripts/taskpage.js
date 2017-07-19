@@ -132,6 +132,15 @@ function randomizetasks() {
     var isassigned = nameobj.isassigned;
     setallzero(isassigned);
     var numpeople = nameobj.names.length;
+    console.log(nameobj.nameshtmllist);
+    for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
+        var temp = document.getElementById("names" + i);
+        temp.parentNode.removeChild(temp);
+    }
+    console.log(nameobj.parentdiv);
+    while(nameobj.parentdiv.firstChild) {
+        nameobj.parentdiv.removeChild(nameobj.parentdiv.firstChild);
+    }
     nameobj.nameshtmllist.length = 0;
     nameobj.taskshtmllist.length = 0;
     //clearassignment();
