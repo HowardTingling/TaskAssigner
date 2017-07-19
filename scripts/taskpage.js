@@ -13,7 +13,6 @@ function logarray(array) {
     for (var index = 0; index < array.length; ++index) {
         console.log(index + ": " + array[index]);
     }
-    console.log("SEPARATOR");
 }
 
 function setallzero(array) {
@@ -34,9 +33,9 @@ function isalltrue(array) {
 }
 
 function cleararray(array) {
-    console.log("hi" + array);
+    console.log("length: " + array.length);
     for (var iter = 0; iter < array.length; ++iter) {
-        array.pop();
+        console.log(iter + ": " + array.pop());
     }
 }
 
@@ -67,10 +66,15 @@ function createhtmlelement(tagname, innerHTML, classname, idname) {
     this.htmlelement.innerHTML = innerHTML;
 }
 
+function erasediv(divelem) {
+    while(divelem.firstChild) {
+        divelem.removeChild(divelem.firstChild);
+    }
+}
 
 var setparent = function(parenthtmlobj, childhtmlobj) {
-    this.tasks = []
-    this.taskpositions = []
+    this.tasks = [];
+    this.taskpositions = [];
     this.namediv;
     childhtmlobj.fontsize = parenthtmlobj.fontsize - 1;
     if (childhtmlobj.fontsize < mintextsize) {
@@ -133,14 +137,14 @@ function randomizetasks() {
     setallzero(isassigned);
     var numpeople = nameobj.names.length;
     console.log(nameobj.nameshtmllist);
+    /*
     for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
         var temp = document.getElementById("names" + i);
         temp.parentNode.removeChild(temp);
     }
+    */
     console.log(nameobj.parentdiv);
-    while(nameobj.parentdiv.firstChild) {
-        nameobj.parentdiv.removeChild(nameobj.parentdiv.firstChild);
-    }
+    erasediv(nameobj.parentdiv);
     nameobj.nameshtmllist.length = 0;
     nameobj.taskshtmllist.length = 0;
     //clearassignment();
@@ -215,13 +219,9 @@ for (var i=0; i < nameobj.namelist.length; ++i) {
 }
 END BUTTONTAG*/
 var clearassignment = function() {
-    for (var i=0; i<nameobj.namelist.length; ++i) {
-        while(nameobj.namelist[i].namediv.childNodes.length > 1) {
-            nameobj.namelist[i].namediv.removeChild(nameobj.namelist[i].namediv.lastChild);
-        }
-        cleararray(nameobj.namelist[i].tasks);
-        cleararray(nameobj.namelist[i].taskpositions);
-    }
+    erasediv(nameobj.parentdiv);
+    nameobj.names.length = 0;
+    nameobj.tasks.length = 0;
 }
 
 var clearall = function() {
