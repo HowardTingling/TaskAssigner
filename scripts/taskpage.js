@@ -51,18 +51,19 @@ function createbutton(innerhtml, id){
 function createhtmlelement(tagname, innerHTML, classname, idname) {
     this.offset = 0;
     this.fontsize = 22;
-    this.newelement = document.createElement(tagname);
+    this.htmlelement = document.createElement(tagname);
+    this.childrenhtml = [];
     //default attributes
-    this.newelement.setAttribute("style", "font-family=monospace;color:black;");
-    this.newelement.style.fontSize=this.fontsize + "px";
+    this.htmlelement.setAttribute("style", "font-family=monospace;color:black;");
+    this.htmlelement.style.fontSize=this.fontsize + "px";
     if (classname) {
-        this.newelement.className = classname;
-        //newelement.setAttribute("class", classname);
+        this.htmlelement.className = classname;
+        //htmlelement.setAttribute("class", classname);
     }
     if (idname) {
-        this.newelement.setAttribute("id", idname);
+        this.htmlelement.id = idname;
     }
-    this.newelement.innerHTML = innerHTML;
+    this.htmlelement.innerHTML = innerHTML;
 }
 
 
@@ -75,15 +76,14 @@ var setparent = function(parenthtmlobj, childhtmlobj) {
         childhtmlobj.fontsize = mintextsize;
     }
     childhtmlobj.offset = parenthtmlobj.offset + 3;
-    childhtmlobj.newelement.style.fontSize = childhtmlobj.fontsize + "px";
-    var childhtml = childhtmlobj.newelement.innerHTML + 8;
-    childhtmlobj.newelement.innerHTML = "";
-    printspace(childhtmlobj.offset, childhtmlobj.newelement);
-    childhtmlobj.newelement.innerHTML += childhtml;
-    parenthtmlobj.appendChild(childhtmlobj);
+    childhtmlobj.htmlelement.style.fontSize = childhtmlobj.fontsize + "px";
+    var childhtml = childhtmlobj.htmlelement.innerHTML;
+    childhtmlobj.htmlelement.innerHTML = "";
+    printspace(childhtmlobj.offset, childhtmlobj.htmlelement);
+    childhtmlobj.htmlelement.innerHTML += childhtml;
+    parenthtmlobj.childrenhtml.push(childhtmlobj.htmlelement);
+    parenthtmlobj.htmlelement.appendChild(childhtmlobj.htmlelement);
 }
-
-
 
 /* Days of Week module*/
 var namecontainer = function() {
@@ -92,17 +92,19 @@ var namecontainer = function() {
     this.namediv;
 }
 
-var namecontainer = function() {
-    this.namelist = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    this.tasks = [];
-    this.names = [];
+var htmlcontainer = function() {
+    this.parentdiv =  document.createElement("div");
+    this.nameshtmllist = []; //contains html elems of names
+    this.taskshtmllist = []; //contains html elems of tasks
+    this.tasks = []; //contains list of strings of tasks
+    this.names = []; //contains list of strings of names
     // use isassigned to check if random index is already used
     // if all indices have been assigned, then reset isassigned.
     this.isassigned = [];
-    this.isassigned.length = this.namelist.length 
+    this.isassigned.length = this.names.length 
     setallzero(this.isassigned);
-    this.parentdiv = document.createElement("div");
-    this.parentdiv.setAttribute("id", "root");
+    this.resultdiv = document.createElement("div");
+    this.resultdiv.setAttribute("id", "root");
     this.namelist = []; //list of divs containing name objects
     this.tasklist = []; //list of possible tasks that were inputted
     for(var i=0; i<this.namelist.length;++i) {
@@ -114,38 +116,51 @@ var namecontainer = function() {
         var buttontag = createbutton("clear", this.namelist[i] + "btn");
         dayofweek.appendChild(buttontag);
            END BUTTON TAG */
-        namediv.appendChild(dayofweek.newelement);
+        namediv.appendChild(dayofweek.htmlelement);
         var dayobj = new namecontainer();
         dayobj.namediv = namediv;
         this.namelist.push(dayobj);
-        this.parentdiv.appendChild(dayobj.namediv);
+        this.resultdiv.appendChild(dayobj.namediv);
     }
 }
 
-var nameobj = new namecontainer();
+var nameobj = new htmlcontainer();
 document.body.appendChild(nameobj.parentdiv);
-
 //numdays schema faster
 function randomizetasks() {
-    setallzero(nameobj.isassigned);
     var isassigned = nameobj.isassigned;
-    var numdays = nameobj.namelist.length;
-    clearassignment();
+    setallzero(isassigned);
+    var numpeople = nameobj.names.length;
+    nameobj.parentdiv.innerHTML = "";
+    //clearassignment();
     var numassigned = 0;
-    for (var i=0; i < nameobj.tasklist.length; ++i) {
-        var divindex = Math.floor(Math.random() * numdays);
+    //create html divs for each person and push onto nameshtmllist
+    for (var i=0; i < nameobj.names.length; ++i) {
+        nameobj.nameshtmllist.push(new createhtmlelement("div", nameobj.names[i], "container", "names" + i));
+    }
+    //create html tags for each task and push onto taskshtmllist
+    for (var i = 0; i < nameobj.tasks.length; ++i) {
+        nameobj.taskshtmllist.push(new createhtmlelement("span", nameobj.tasks[i], "item", "items" + i));
+    }
+    for (var i=0; i < nameobj.tasks.length; ++i) {
+        var divindex = Math.floor(Math.random() * numpeople);
         while (isassigned[divindex]) {
-            divindex = Math.floor(Math.random() * numdays);
+            divindex = Math.floor(Math.random() * numpeople);
         }
         isassigned[divindex] = 1;
         ++numassigned;
-        if (numassigned % numdays == 0) {
+        if (numassigned % numpeople == 0) {
             setallzero(isassigned);
         }
-        nameobj.namelist[divindex].namediv.appendChild(nameobj.tasklist[i]);
-        nameobj.namelist[divindex].taskpositions.push(i);
-        nameobj.namelist[divindex].tasks.push(nameobj.tasklist[i]);
+        setparent(nameobj.nameshtmllist[divindex], nameobj.taskshtmllist[i]);
     }
+    for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
+        nameobj.parentdiv.appendChild(nameobj.nameshtmllist[i].htmlelement);
+        for (var j = 0; j < nameobj.nameshtmllist[i].childrenhtml.length; ++j) {
+            //nameobj.nameshtmllist[i].childrenhtml[j]
+        }
+    }
+    document.body.appendChild(nameobj.parentdiv);
 }
 
 function assigntask() {
