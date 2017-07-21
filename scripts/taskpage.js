@@ -103,7 +103,6 @@ var htmlcontainer = function() {
     this.tasktopeople = tasktopeople.checked;
     this.peopletotask = peopletotask.checked;
     this.peopletotask = document.getElementById("peopletotask");
-    
     this.parentdiv =  document.createElement("div");
     this.nameshtmllist = []; //contains html elems of names
     this.taskshtmllist = []; //contains html elems of tasks
@@ -142,6 +141,7 @@ function randomizetasks() {
     var isassigned = nameobj.isassigned;
     setallzero(isassigned);
     var numpeople = nameobj.names.length;
+    var numtasks = nameobj.tasks.length;
     console.log(nameobj.nameshtmllist);
     /*
     for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
@@ -163,32 +163,41 @@ function randomizetasks() {
     for (var i = 0; i < nameobj.tasks.length; ++i) {
         nameobj.taskshtmllist.push(new createhtmlelement("div", nameobj.tasks[i], "item", "items" + i));
     }
-    for (var i=0; i < nameobj.tasks.length; ++i) {
-        var divindex = Math.floor(Math.random() * numpeople);
-        while (isassigned[divindex]) {
-            divindex = Math.floor(Math.random() * numpeople);
-        }
-        isassigned[divindex] = 1;
-        ++numassigned;
-        if (numassigned % numpeople == 0) {
-            setallzero(isassigned);
-        }
-        if (nameobj.tasktopeople) {
-            setparent(nameobj.nameshtmllist[divindex], nameobj.taskshtmllist[i]);
-        } else {
-            setparent(nameobj.taskshtmllist[i], nameobj.nameshtmllist[divindex]);
-        }
-    }
     if (nameobj.tasktopeople) {
+        for (var i=0; i < nameobj.tasks.length; ++i) {
+            var divindex = Math.floor(Math.random() * numpeople);
+            while (isassigned[divindex]) {
+                divindex = Math.floor(Math.random() * numpeople);
+            }
+            isassigned[divindex] = 1;
+            ++numassigned;
+            if (numassigned % numpeople == 0) {
+                setallzero(isassigned);
+            }
+            setparent(nameobj.nameshtmllist[divindex], nameobj.taskshtmllist[i]);
+        }
         for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
             nameobj.parentdiv.appendChild(nameobj.nameshtmllist[i].htmlelement);
         }
     } else {
+        for (var i=0; i < nameobj.names.length; ++i) {
+            var divindex = Math.floor(Math.random() * numtasks);
+            while (isassigned[divindex]) {
+                divindex = Math.floor(Math.random() * numtasks);
+            }
+            isassigned[divindex] = 1;
+            ++numassigned;
+            if (numassigned % numtasks == 0) {
+                setallzero(isassigned);
+            }
+            setparent(nameobj.taskshtmllist[divindex], nameobj.nameshtmllist[i]);
+        }
         for (var i = 0; i < nameobj.taskshtmllist.length; ++i) {
             nameobj.parentdiv.appendChild(nameobj.taskshtmllist[i].htmlelement);
         }
     }
 }
+    
 
 function assigntask() {
     var namelist = nameobj.namelist;
@@ -248,7 +257,7 @@ var loglists = function(namelist, tasklist) {
     logarray(tasklist);
 }
 
-var updateradiobtns = function() {
+var updateAssignSchema = function() {
     nameobj.peopletotask = peopletotask.checked;
     nameobj.tasktopeople = tasktopeople.checked;
     console.log(nameobj.peopletotask);
@@ -256,5 +265,5 @@ var updateradiobtns = function() {
 
 allclearbtn.addEventListener("click", clearall);
 randomizebtn.setAttribute("onclick", "randomizetasks();");
-tasktopeople.addEventListener("click", updateradiobtns);
-peopletotask.addEventListener("click", updateradiobtns);
+tasktopeople.addEventListener("click", updateAssignSchema);
+peopletotask.addEventListener("click", updateAssignSchema);
