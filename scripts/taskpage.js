@@ -5,6 +5,9 @@ var randomizebtn = document.getElementById("randomizebtn");
 var testbtn = document.getElementById("testbtn");
 var tasktopeople = document.getElementById("tasktopeople");
 var peopletotask = document.getElementById("peopletotask");
+var taskslist = document.getElementById("tasks");
+var peoplelist = document.getElementById("people");
+
 function printspace(offset, htmltag) {
     for(var space=0; space<offset; space++) {
         htmltag.innerHTML+="&nbsp";
@@ -82,7 +85,7 @@ var setparent = function(parenthtmlobj, childhtmlobj) {
     if (childhtmlobj.fontsize < mintextsize) {
         childhtmlobj.fontsize = mintextsize;
     }
-    childhtmlobj.offset = parenthtmlobj.offset + 3;
+    childhtmlobj.offset = parenthtmlobj.offset + 1;
     childhtmlobj.htmlelement.style.fontSize = childhtmlobj.fontsize + "px";
     var childhtml = childhtmlobj.htmlelement.innerHTML;
     childhtmlobj.htmlelement.innerHTML = "";
@@ -143,27 +146,20 @@ function randomizetasks() {
     var numpeople = nameobj.names.length;
     var numtasks = nameobj.tasks.length;
     console.log(nameobj.nameshtmllist);
-    /*
-    for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
-        var temp = document.getElementById("names" + i);
-        temp.parentNode.removeChild(temp);
-    }
-    */
     console.log(nameobj.parentdiv);
     erasediv(nameobj.parentdiv);
     nameobj.nameshtmllist.length = 0;
     nameobj.taskshtmllist.length = 0;
-    //clearassignment();
     var numassigned = 0;
-    //create html divs for each person and push onto nameshtmllist
-    for (var i=0; i < nameobj.names.length; ++i) {
-        nameobj.nameshtmllist.push(new createhtmlelement("div", nameobj.names[i], "container", "names" + i));
-    }
-    //create html tags for each task and push onto taskshtmllist
-    for (var i = 0; i < nameobj.tasks.length; ++i) {
-        nameobj.taskshtmllist.push(new createhtmlelement("div", nameobj.tasks[i], "item", "items" + i));
-    }
     if (nameobj.tasktopeople) {
+        for (var i=0; i < nameobj.names.length; ++i) {
+            nameobj.nameshtmllist.push(new createhtmlelement("div", nameobj.names[i] + ": ", "container", "names" + i));
+        }
+        //create html tags for each task and push onto taskshtmllist
+        for (var i = 0; i < nameobj.tasks.length; ++i) {
+            nameobj.taskshtmllist.push(new createhtmlelement("span", nameobj.tasks[i], "item", "items" + i));
+        }
+        //find random index and assign if available repeatedly
         for (var i=0; i < nameobj.tasks.length; ++i) {
             var divindex = Math.floor(Math.random() * numpeople);
             while (isassigned[divindex]) {
@@ -176,10 +172,18 @@ function randomizetasks() {
             }
             setparent(nameobj.nameshtmllist[divindex], nameobj.taskshtmllist[i]);
         }
+        //append each html tag obj to html div
         for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
             nameobj.parentdiv.appendChild(nameobj.nameshtmllist[i].htmlelement);
         }
     } else {
+        for (var i=0; i < nameobj.names.length; ++i) {
+            nameobj.nameshtmllist.push(new createhtmlelement("span", nameobj.names[i], "container", "names" + i));
+        }
+        //create html tags for each task and push onto taskshtmllist
+        for (var i = 0; i < nameobj.tasks.length; ++i) {
+            nameobj.taskshtmllist.push(new createhtmlelement("div", nameobj.tasks[i] + ": ", "item", "items" + i));
+        }
         for (var i=0; i < nameobj.names.length; ++i) {
             var divindex = Math.floor(Math.random() * numtasks);
             while (isassigned[divindex]) {
@@ -205,6 +209,7 @@ function assigntask() {
     //Create floating div with task number; to be assigned under a day of week
     var val = document.getElementById("task-box").value;
     nameobj.tasks.push(val);
+    taskslist.innerHTML += "(" + val + ")" + "&nbsp";
     console.log(nameobj.tasks[nameobj.tasks.length-1]);
     return false;
 }
@@ -215,6 +220,7 @@ function assignnames() {
     //Create floating div with task number; to be assigned under a day of week
     var val = document.getElementById("name-box").value;
     nameobj.names.push(val);
+    peoplelist.innerHTML += "(" + val + ")" + "&nbsp";
     console.log(nameobj.names[nameobj.names.length-1]);
     return false;
 }
@@ -250,6 +256,8 @@ var clearall = function() {
     clearassignment();
     nameobj.tasklist.length = 0;
     setallzero(nameobj.isassigned);
+    taskslist.innerHTML = "Tasks: ";
+    peoplelist.innerHTML = "People: ";
 }
 
 var loglists = function(namelist, tasklist) {
