@@ -204,10 +204,12 @@ function randomizetasks() {
     
 
 function assigntask() {
+    var val = document.getElementById("task-box").value;
+    if (val == "") {
+        return false;
+    }
     var namelist = nameobj.namelist;
     var tasklist = nameobj.tasklist;
-    //Create floating div with task number; to be assigned under a day of week
-    var val = document.getElementById("task-box").value;
     nameobj.tasks.push(val);
     taskslist.innerHTML += "(" + val + ")" + "&nbsp";
     console.log(nameobj.tasks[nameobj.tasks.length-1]);
@@ -215,10 +217,12 @@ function assigntask() {
 }
 
 function assignnames() {
+    var val = document.getElementById("name-box").value;
+    if (val == "") {
+        return false;
+    }
     var namelist = nameobj.namelist;
     var tasklist = nameobj.tasklist;
-    //Create floating div with task number; to be assigned under a day of week
-    var val = document.getElementById("name-box").value;
     nameobj.names.push(val);
     peoplelist.innerHTML += "(" + val + ")" + "&nbsp";
     console.log(nameobj.names[nameobj.names.length-1]);
