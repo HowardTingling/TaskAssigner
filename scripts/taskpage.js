@@ -157,7 +157,7 @@ function randomizetasks() {
         }
         //create html tags for each task and push onto taskshtmllist
         for (var i = 0; i < nameobj.tasks.length; ++i) {
-            nameobj.taskshtmllist.push(new createhtmlelement("span", nameobj.tasks[i], "item", "items" + i));
+            nameobj.taskshtmllist.push(new createhtmlelement("span", "|" + nameobj.tasks[i] + "|", "item", "items" + i));
         }
         //find random index and assign if available repeatedly
         for (var i=0; i < nameobj.tasks.length; ++i) {
@@ -178,7 +178,7 @@ function randomizetasks() {
         }
     } else {
         for (var i=0; i < nameobj.names.length; ++i) {
-            nameobj.nameshtmllist.push(new createhtmlelement("span", nameobj.names[i], "container", "names" + i));
+            nameobj.nameshtmllist.push(new createhtmlelement("span", "|" + nameobj.names[i] + "|", "container", "names" + i));
         }
         //create html tags for each task and push onto taskshtmllist
         for (var i = 0; i < nameobj.tasks.length; ++i) {
