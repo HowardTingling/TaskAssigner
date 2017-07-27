@@ -1,6 +1,6 @@
 /* CARD MODULE */
 var cardscontainer = function(xpos, ypos) {
-		this.xpos = xpos;
+	this.xpos = xpos;
     this.ypos = ypos;
     this.containerheight = 20;
     this.containerwidth = 40;
