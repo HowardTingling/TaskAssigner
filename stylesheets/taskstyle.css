@@ -24,6 +24,10 @@ body {
     border-bottom: 1px solid black;
 }
 
+.twenty {
+    font-size: 20px;
+}
+
 .bluebutton {
     border-radius: 100px;
     background:#0061ff;
@@ -47,4 +51,8 @@ body {
     border-radius:5px;
     padding:4px;
     border:1px dotted #181919;
+}
+
+table, th, td {
+    border: 1px solid black;
 }

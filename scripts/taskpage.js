@@ -52,6 +52,41 @@ function createbutton(innerhtml, id){
     buttontag.innerHTML=innerhtml;
     return buttontag;
 }
+/*
+|r0,c0|r0,c1|
+|r1,c0|r1,c1|
+
+| 0,0 | 0,1 | 0,2 | 0,3 | 0,4 |
+| 1,0 | 1,1 | 1,2 | 1,3 | 1,4 |
+| 2,0 | 2,1 | 2,2 | 2,3 | 2,4 |
+| 3,0 | 3,1 | 3,2 | 3,3 | 3,4 |
+
+1. Create table
+2. Add first table row
+3. Under each table row, add a person (th) separated by a space (td)
+4. The next row is the first assignment to each person 
+	"row1col" + divindex
+*/
+function createTable(containerlist,containeelist, dummytext) {
+    var numrows = Math.floor(containeelist.length / containerlist.length);
+    var numcolumns = containerlist.length;
+    var table = createhtmlelement("table", "", "", "matchingtable");
+    //Create first row; first row contains person names.
+    var firstrow = createhtmlelement("tr", "", "", "row0");
+    for (var columniter = 0; columniter < numcolumns; ++columniter) {
+        var tableitem = createhtmlelement("th", "Person #" + columniter, "tablerow", "row" + 0 + "col" + columniter);
+        if (columniter != 0) {
+            table.appendChild(document.createElement("td"));
+        }
+        firstrow.appendChild(tableitem);
+    }
+    table.appendChild(firstrow);
+    for (var rowiter = 1; rowiter < numrows; ++rowiter) {
+        for (var columniter = 0; columniter < numcolumns; ++columniter) {
+            var tableitem = createhtmlelement("tr", "Task #" + columniter, "tablerow", "row" + rowiter + "col" + columniter);
+        }
+    }
+}
 
 function createhtmlelement(tagname, innerHTML, classname, idname) {
     this.offset = 0;
@@ -139,7 +174,7 @@ var htmlcontainer = function() {
 
 var nameobj = new htmlcontainer();
 document.body.appendChild(nameobj.parentdiv);
-//numdays schema faster
+
 function randomizetasks() {
     var isassigned = nameobj.isassigned;
     setallzero(isassigned);
@@ -176,6 +211,9 @@ function randomizetasks() {
         for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
             nameobj.parentdiv.appendChild(nameobj.nameshtmllist[i].htmlelement);
         }
+    
+        
+        
     } else {
         for (var i=0; i < nameobj.names.length; ++i) {
             nameobj.nameshtmllist.push(new createhtmlelement("span", "|" + nameobj.names[i] + "|", "container", "names" + i));
