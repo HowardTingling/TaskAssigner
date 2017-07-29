@@ -67,25 +67,43 @@ function createbutton(innerhtml, id){
 4. The next row is the first assignment to each person 
 	"row1col" + divindex
 */
-function createTable(containerlist,containeelist, dummytext) {
-    var numrows = Math.floor(containeelist.length / containerlist.length);
-    var numcolumns = containerlist.length;
-    var table = createhtmlelement("table", "", "", "matchingtable");
-    //Create first row; first row contains person names.
-    var firstrow = createhtmlelement("tr", "", "", "row0");
-    for (var columniter = 0; columniter < numcolumns; ++columniter) {
-        var tableitem = createhtmlelement("th", "Person #" + columniter, "tablerow", "row" + 0 + "col" + columniter);
-        if (columniter != 0) {
-            table.appendChild(document.createElement("td"));
+//createTable(nameobj.names, nameobj.tasks)
+//createTable(stringlist1, stringlist2);\
+//returns a table
+function createTable(containerlist,containeelist) {
+    var tablehead = document.createElement("table");
+    tablehead.className = "tablehead";
+    /* Add first row with group heads */
+    var firstrow = document.createElement("tr");
+    firstrow.setAttribute("id", "headrow");
+    tablehead.appendChild(firstrow);
+    for (var i = 0; i < containerlist.length; ++i) {
+        var container = document.createElement("th");
+        container.innerHTML = containerlist[i];
+        firstrow.appendChild(container);
+        if (i != container.length - 1) {
+            firstrow.appendChild(document.createElement("td"));
         }
-        firstrow.appendChild(tableitem);
     }
-    table.appendChild(firstrow);
-    for (var rowiter = 1; rowiter < numrows; ++rowiter) {
-        for (var columniter = 0; columniter < numcolumns; ++columniter) {
-            var tableitem = createhtmlelement("tr", "Task #" + columniter, "tablerow", "row" + rowiter + "col" + columniter);
+    /* Finished first row group head creation */
+    /* add rows of empty td's */
+    var numrows = Math.ceil(containeelist.length / containerlist.length);
+    for (var row = 0; row < numrows; ++row) {
+        var tablerow = document.createElement("tr");
+        tablerow.id = "row" + row;
+        for (var col = 0; col < containerlist.length; ++col) {
+            var column = document.createElement("td");
+            column.innerHTML = "";
+            column.setAttribute("id", "row" + row + "col" + col);
+            var tdspace = document.createElement("td");
+            tablerow.appendChild(column);
+            if (col != containerlist.length - 1) {
+                tablerow.appendChild(tdspace);
+            }
         }
+        tablehead.appendChild(tablerow);
     }
+    return tablehead;
 }
 
 function createhtmlelement(tagname, innerHTML, classname, idname) {
@@ -129,6 +147,8 @@ var setparent = function(parenthtmlobj, childhtmlobj) {
     parenthtmlobj.childrenhtml.push(childhtmlobj.htmlelement);
     parenthtmlobj.htmlelement.appendChild(childhtmlobj.htmlelement);
 }
+
+
 
 /* Days of Week module*/
 var namecontainer = function() {
@@ -180,37 +200,65 @@ function randomizetasks() {
     setallzero(isassigned);
     var numpeople = nameobj.names.length;
     var numtasks = nameobj.tasks.length;
-    console.log(nameobj.nameshtmllist);
-    console.log(nameobj.parentdiv);
     erasediv(nameobj.parentdiv);
-    nameobj.nameshtmllist.length = 0;
-    nameobj.taskshtmllist.length = 0;
     var numassigned = 0;
     if (nameobj.tasktopeople) {
-        for (var i=0; i < nameobj.names.length; ++i) {
-            nameobj.nameshtmllist.push(new createhtmlelement("div", nameobj.names[i] + ": ", "container", "names" + i));
-        }
-        //create html tags for each task and push onto taskshtmllist
-        for (var i = 0; i < nameobj.tasks.length; ++i) {
-            nameobj.taskshtmllist.push(new createhtmlelement("span", "|" + nameobj.tasks[i] + "|", "item", "items" + i));
-        }
-        //find random index and assign if available repeatedly
-        for (var i=0; i < nameobj.tasks.length; ++i) {
-            var divindex = Math.floor(Math.random() * numpeople);
-            while (isassigned[divindex]) {
-                divindex = Math.floor(Math.random() * numpeople);
+        /* Create table */
+        var tablehead = document.createElement("table");
+        tablehead.className = "tablehead";
+        /* Add first row with group heads */
+        var firstrow = document.createElement("tr");
+        firstrow.setAttribute("id", "headrow");
+        tablehead.appendChild(firstrow);
+        console.log(nameobj.names);
+        for (var i = 0; i < nameobj.names.length; ++i) {
+            var person = document.createElement("th");
+            person.innerHTML = nameobj.names[i];
+            firstrow.appendChild(person);
+            if (i != nameobj.names.length - 1) {
+                firstrow.appendChild(document.createElement("td"));
             }
-            isassigned[divindex] = 1;
+        }
+        console.log(tablehead);
+        /* Finished first row group head creation */
+        /* add rows of empty td's */
+        var numrows = Math.ceil(nameobj.tasks.length / nameobj.names.length);
+        console.log("NUMROWS: " + numrows);
+        for (var row = 0; row < numrows; ++row) {
+            var tablerow = document.createElement("tr");
+            tablerow.id = "row" + row;
+            for (var col = 0; col < nameobj.names.length; ++col) {
+                var column = document.createElement("td");
+                column.innerHTML = "";
+                column.setAttribute("id", "row" + row + "col" + col);
+                var tdspace = document.createElement("td");
+                tablerow.appendChild(column);
+                tablerow.appendChild(tdspace);
+            }
+            tablehead.appendChild(tablerow);
+        }
+        nameobj.parentdiv.appendChild(tablehead);
+        document.body.appendChild(nameobj.parentdiv);
+        console.log("HEAD:");
+        console.log(tablehead);
+        //find random index and assign if available repeatedly
+        var row = 0;
+        for (var i=0; i < nameobj.tasks.length; ++i) {
+            var col = Math.floor(Math.random() * numpeople);
+            while (isassigned[col]) {
+                col = Math.floor(Math.random() * numpeople);
+            }
+            var rowcolumn = document.getElementById("row" + row + "col" + col);
+            console.log("ID: row" + row + "col" + col);
+            rowcolumn.innerHTML = nameobj.tasks[i];
+            isassigned[col] = 1;
             ++numassigned;
             if (numassigned % numpeople == 0) {
                 setallzero(isassigned);
+                ++row;
             }
-            setparent(nameobj.nameshtmllist[divindex], nameobj.taskshtmllist[i]);
         }
         //append each html tag obj to html div
-        for (var i = 0; i < nameobj.nameshtmllist.length; ++i) {
-            nameobj.parentdiv.appendChild(nameobj.nameshtmllist[i].htmlelement);
-        }
     
         
         
