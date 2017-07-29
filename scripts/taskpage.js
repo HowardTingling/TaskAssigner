@@ -81,7 +81,7 @@ function createTable(containerlist,containeelist) {
         var container = document.createElement("th");
         container.innerHTML = containerlist[i];
         firstrow.appendChild(container);
-        if (i != container.length - 1) {
+        if (i != containerlist.length - 1) {
             firstrow.appendChild(document.createElement("td"));
         }
     }
@@ -95,10 +95,10 @@ function createTable(containerlist,containeelist) {
             var column = document.createElement("td");
             column.innerHTML = "";
             column.setAttribute("id", "row" + row + "col" + col);
-            var tdspace = document.createElement("td");
             tablerow.appendChild(column);
             if (col != containerlist.length - 1) {
-                tablerow.appendChild(tdspace);
+                var emptytd = document.createElement("td");
+                tablerow.appendChild(emptytd);
             }
         }
         tablehead.appendChild(tablerow);
@@ -204,43 +204,9 @@ function randomizetasks() {
     var numassigned = 0;
     if (nameobj.tasktopeople) {
         /* Create table */
-        var tablehead = document.createElement("table");
-        tablehead.className = "tablehead";
-        /* Add first row with group heads */
-        var firstrow = document.createElement("tr");
-        firstrow.setAttribute("id", "headrow");
-        tablehead.appendChild(firstrow);
-        console.log(nameobj.names);
-        for (var i = 0; i < nameobj.names.length; ++i) {
-            var person = document.createElement("th");
-            person.innerHTML = nameobj.names[i];
-            firstrow.appendChild(person);
-            if (i != nameobj.names.length - 1) {
-                firstrow.appendChild(document.createElement("td"));
-            }
-        }
-        console.log(tablehead);
-        /* Finished first row group head creation */
-        /* add rows of empty td's */
-        var numrows = Math.ceil(nameobj.tasks.length / nameobj.names.length);
-        console.log("NUMROWS: " + numrows);
-        for (var row = 0; row < numrows; ++row) {
-            var tablerow = document.createElement("tr");
-            tablerow.id = "row" + row;
-            for (var col = 0; col < nameobj.names.length; ++col) {
-                var column = document.createElement("td");
-                column.innerHTML = "";
-                column.setAttribute("id", "row" + row + "col" + col);
-                var tdspace = document.createElement("td");
-                tablerow.appendChild(column);
-                tablerow.appendChild(tdspace);
-            }
-            tablehead.appendChild(tablerow);
-        }
+        var tablehead = createTable(nameobj.names, nameobj.tasks);
         nameobj.parentdiv.appendChild(tablehead);
         document.body.appendChild(nameobj.parentdiv);
-        console.log("HEAD:");
-        console.log(tablehead);
         //find random index and assign if available repeatedly
         var row = 0;
         for (var i=0; i < nameobj.tasks.length; ++i) {
