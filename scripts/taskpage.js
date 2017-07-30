@@ -251,28 +251,32 @@ function randomizetasks() {
     
 
 function assigntask() {
-    var val = document.getElementById("task-box").value;
+    var box = document.getElementById("task-box");
+    var val = box.value;
     if (val == "") {
         return false;
     }
     var namelist = nameobj.namelist;
     var tasklist = nameobj.tasklist;
     nameobj.tasks.push(val);
+    box.value = "";
     taskslist.innerHTML += "(" + val + ")" + "&nbsp";
     console.log(nameobj.tasks[nameobj.tasks.length-1]);
+    
     return false;
 }
 
 function assignnames() {
-    var val = document.getElementById("name-box").value;
+    var box = document.getElementById("name-box");
+    var val = box.value;
     if (val == "") {
         return false;
     }
     var namelist = nameobj.namelist;
     var tasklist = nameobj.tasklist;
     nameobj.names.push(val);
-    peoplelist.innerHTML += "(" + val + ")" + "&nbsp";
-    console.log(nameobj.names[nameobj.names.length-1]);
+    peoplelist.innerHTML += "[" + val + "]" + "&nbsp";
+    box.value = "";
     return false;
 }
 
